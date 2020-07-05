@@ -49,16 +49,11 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
-    mkdir -p $DBB_HOME  \
     && chown ${uid}:${gid} $JENKINS_HOME \
     && chown ${uid}:${gid} $DBB_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
-# Jenkins home directory is a volume, so configuration and build history
-# can be persisted and survive image upgrades
-VOLUME $JENKINS_HOME
-VOLUME $DBB_HOME
 # $REF (defaults to `/usr/share/jenkins/ref/`) contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
 # or config file with your custom jenkins Docker image.
@@ -78,19 +73,12 @@ RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
     && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
 RUN chown -R ${user} "$JENKINS_HOME" "$REF" "$DBB_HOME"
 #
-# for main web interface:
-EXPOSE ${http_port}
-
-# will be used by attached slave agents:
-EXPOSE ${agent_port}
-#
-# will be used by dbb web server:
-EXPOSE ${dbb_port}
 #
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN cd /var/dbb_home/ && \
+RUN mkdir -p $DBB_HOME && \
+    cd $DBB_HOME && \
     curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
     tar -xvf dbb-server-1.0.9.tar.gz 
 
@@ -112,6 +100,20 @@ RUN chmod +x /usr/local/bin/install-plugins.sh
 COPY /supervisord.conf /etc/
 RUN mkdir -p /var/log/supervisord/ 
 #
+# Jenkins home directory is a volume, so configuration and build history
+# can be persisted and survive image upgrades
+VOLUME $JENKINS_HOME
+VOLUME $DBB_HOME
+
+# for main web interface:
+EXPOSE ${http_port}
+
+# will be used by attached slave agents:
+EXPOSE ${agent_port}
+#
+# will be used by dbb web server:
+EXPOSE ${dbb_port}
+
 #  USER ${user}
 #
 #

@@ -58,7 +58,9 @@ if [ $? -ne 0 ]; then
   echo "Failed to authenticate to IBM Cloud container registry"
   exit 1
 fi
-ibmcloud cr build --tag us.icr.io/"$icp_name"/"$git_repo" ./
+# ibmcloud cr build --tag us.icr.io/"$icp_name"/"$git_repo" ./
+docker tag $git_repo us.icr.io/"$icp_name"/"$git_repo"
+docker push us.icr.io/"$icp_name"/"$git_repo"
 ############################################################################
 # Start the deployment details using kubectl                               #
 ############################################################################
