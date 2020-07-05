@@ -114,7 +114,7 @@ COPY /supervisord.conf /etc/
 RUN mkdir -p /var/log/supervisord/ \
     chmod +rwx /var/log/supervisord/
 #
- USER ${user}
+#  USER ${user}
 #
 #
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
