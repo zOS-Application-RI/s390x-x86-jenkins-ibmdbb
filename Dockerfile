@@ -79,7 +79,7 @@ RUN mkdir -p $DBB_HOME && \
     cd $DBB_HOME && \
     curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
     tar -xvf dbb-server-1.0.9.tar.gz 
-
+RUN chmod +x /var/dbb_home/wlp/bin/
 COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
@@ -100,8 +100,8 @@ RUN mkdir -p /var/log/supervisord/
 #
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
-VOLUME $JENKINS_HOME
-VOLUME $DBB_HOME
+# VOLUME $JENKINS_HOME
+# VOLUME $DBB_HOME
 
 # for main web interface:
 EXPOSE ${http_port}
