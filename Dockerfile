@@ -88,12 +88,6 @@ EXPOSE ${agent_port}
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
 #
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh /usr/local/bin/jenkins.sh
-COPY tini-shim.sh /bin/tini
-# from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup ${REF}/plugins from a support bundle
-COPY plugins.sh /usr/local/bin/plugins.sh
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
@@ -104,10 +98,21 @@ RUN cd ${DBB_HOME} \
 
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
-
+COPY jenkins-support /usr/local/bin/jenkins-support
+RUN chmod +x /usr/local/bin/jenkins-support
+COPY jenkins.sh /usr/local/bin/jenkins.sh
+RUN chmod +x /usr/local/bin/jenkins.sh
+COPY tini-shim.sh /bin/tini
+RUN chmod +x /bin/tini
+# from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup ${REF}/plugins from a support bundle
+COPY plugins.sh /usr/local/bin/plugins.sh
+RUN chmod +x /usr/local/bin/plugins.sh
+COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+RUN chmod +x /usr/local/bin/install-plugins.sh
 # Copy further configuration files into the Docker image
 COPY /supervisord.conf /etc/
-RUN mkdir -p /var/log/supervisord/
+RUN mkdir -p /var/log/supervisord/ \
+    chmod +rwx /var/log/supervisord/
 #
 # USER ${user}
 #
