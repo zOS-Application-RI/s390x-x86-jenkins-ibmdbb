@@ -25,7 +25,6 @@ ARG DBB_VERSION=1.0.9
 ARG REF=/usr/share/jenkins/ref
 
 ENV JENKINS_HOME $JENKINS_HOME
-ENV DBB_HOME $DBB_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
 
@@ -50,11 +49,11 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
-    mkdir -p $DBB_HOME \
-    && chown ${uid}:${gid} $JENKINS_HOME \
-    && chown ${uid}:${gid} $DBB_HOME \
-    && groupadd -g ${gid} ${group} \
-    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    mkdir -p $DBB_HOME 
+    # && chown ${uid}:${gid} $JENKINS_HOME \
+    # && chown ${uid}:${gid} $DBB_HOME \
+    # && groupadd -g ${gid} ${group} \
+    # && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
@@ -91,12 +90,11 @@ EXPOSE ${dbb_port}
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN cd ${DBB_HOME} && \
-    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz && \
-    tar -xvf dbb-server-1.0.9.tar.gz && \
-    rm -f dbb-server-1.0.9.tar.gz 
+RUN cd /var/dbb_home/ && \
+    curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
+    tar -xvf dbb-server-1.0.9.tar.gz 
 
-COPY server.xml ${DBB_HOME}/wlp/usr/servers/dbb
+COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
@@ -112,8 +110,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh
 # Copy further configuration files into the Docker image
 COPY /supervisord.conf /etc/
-RUN mkdir -p /var/log/supervisord/ \
-    chmod +rwx /var/log/supervisord/
+RUN mkdir -p /var/log/supervisord/ 
 #
 #  USER ${user}
 #
