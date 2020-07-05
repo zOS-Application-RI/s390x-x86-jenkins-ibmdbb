@@ -18,7 +18,7 @@ ARG uid=1000
 ARG gid=1000
 ARG http_port=8080
 ARG agent_port=50000
-ARG dbb_port=8080
+ARG dbb_port=9080
 ARG JENKINS_HOME=/var/jenkins_home
 ARG DBB_HOME=/var/dbb_home
 ARG DBB_VERSION=1.0.9
@@ -91,10 +91,11 @@ EXPOSE ${dbb_port}
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN cd ${DBB_HOME} \
-    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz  \
-    tar -zxvf dbb-server-1.0.9.tar.gz 
-    # rm -f dbb-server-${DBB_VERSION}.tar.gz
+RUN cd ${DBB_HOME} && \
+    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz && \
+    tar -zxvf dbb-server-1.0.9.tar.gz \
+    rm -f dbb-server-${DBB_VERSION}.tar.gz \
+    ls -ltr
 
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
