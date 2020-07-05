@@ -92,7 +92,7 @@ EXPOSE ${dbb_port}
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
 RUN cd ${DBB_HOME} \
-    curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/${DBB_VERSION}/dbb-server-${DBB_VERSION}.tar.gz -o ${DBB_HOME}/dbb-server-${DBB_VERSION}.tar.gz \
+    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/${DBB_VERSION}/dbb-server-${DBB_VERSION}.tar.gz  \
     tar -zxvf dbb-server-${DBB_VERSION}.tar.gz \
     rm -f dbb-server-${DBB_VERSION}.tar.gz
 
@@ -114,7 +114,7 @@ COPY /supervisord.conf /etc/
 RUN mkdir -p /var/log/supervisord/ \
     chmod +rwx /var/log/supervisord/
 #
-# USER ${user}
+ USER ${user}
 #
 #
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
