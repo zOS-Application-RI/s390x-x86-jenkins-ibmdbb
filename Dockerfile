@@ -93,9 +93,9 @@ EXPOSE ${dbb_port}
 ################################################################################################
 RUN cd ${DBB_HOME} && \
     wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz && \
-    tar -zxvf dbb-server-1.0.9.tar.gz \
-    rm -f dbb-server-${DBB_VERSION}.tar.gz \
-    ls -ltr
+    tar -xvf dbb-server-1.0.9.tar.gz \
+    rm -f dbb-server-${DBB_VERSION}.tar.gz 
+    
 COPY server.xml ${DBB_HOME}/wlp/usr/servers/dbb
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
