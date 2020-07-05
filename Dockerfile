@@ -70,8 +70,7 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
 # see https://github.com/docker/docker/issues/8331
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
     && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
-RUN chown -R ${user} "$JENKINS_HOME" "$REF" "$DBB_HOME"
-#
+RUN chown -R ${user} "$JENKINS_HOME" "$REF" 
 #
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
