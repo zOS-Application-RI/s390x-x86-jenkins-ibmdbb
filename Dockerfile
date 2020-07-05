@@ -1,4 +1,3 @@
-#FROM openjdk:8-jdk-stretch
 FROM ibmjava:latest
 ################################################################################################
 ################################################################################################
@@ -26,6 +25,7 @@ ARG DBB_VERSION=1.0.9
 ARG REF=/usr/share/jenkins/ref
 
 ENV JENKINS_HOME $JENKINS_HOME
+ENV DBB_HOME $DBB_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
 
@@ -76,7 +76,7 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
 # see https://github.com/docker/docker/issues/8331
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
     && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
-RUN chown -R ${user} "$JENKINS_HOME" "$REF" "DBB_HOME"
+RUN chown -R ${user} "$JENKINS_HOME" "$REF" "$DBB_HOME"
 #
 # for main web interface:
 EXPOSE ${http_port}
