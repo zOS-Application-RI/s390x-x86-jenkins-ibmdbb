@@ -88,8 +88,6 @@ EXPOSE ${agent_port}
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
 #
-USER ${user}
-#
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
@@ -110,6 +108,8 @@ RUN chmod +x /usr/local/bin/start.sh
 # Copy further configuration files into the Docker image
 COPY /supervisord.conf /etc/
 RUN mkdir -p /var/log/supervisord/
-
+#
+# USER ${user}
+#
 #
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
