@@ -50,6 +50,7 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
+    mkdir -p $DBB_HOME \
     && chown ${uid}:${gid} $JENKINS_HOME \
     && chown ${uid}:${gid} $DBB_HOME \
     && groupadd -g ${gid} ${group} \
