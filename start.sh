@@ -1,2 +1,2 @@
 #! /bin/bash -e
-.${DBB_HOME}/wlp/bin/server start dbb
+./var/dbb_home/wlp/bin/server start dbb
