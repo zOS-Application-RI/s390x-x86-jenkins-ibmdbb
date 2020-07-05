@@ -50,7 +50,6 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 # ensure you use the same uid
 RUN mkdir -p $JENKINS_HOME \
     && chown ${uid}:${gid} $JENKINS_HOME \
-    && chown ${uid}:${gid} $DBB_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
