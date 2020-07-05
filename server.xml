@@ -1,0 +1,108 @@
+<server description="new server">
+
+	<!-- Enable features -->
+	<featureManager>
+		<feature>openapi-3.0</feature>
+		<feature>javaee-7.0</feature>
+		<feature>jdbc-4.1</feature>
+		<feature>jpa-2.1</feature>
+		<feature>jsp-2.3</feature>
+		<feature>localConnector-1.0</feature>
+		<feature>jaxrs-2.0</feature>
+		<feature>jaxb-2.2</feature>
+		<feature>ssl-1.0</feature>
+		<feature>blueprint-1.0</feature>
+		<feature>appSecurity-2.0</feature>
+		<feature>wab-1.0</feature>
+		<feature>concurrent-1.0</feature>
+		<feature>osgiBundle-1.0</feature>
+		<feature>passwordUtilities-1.0</feature>
+		<feature>scim-1.0</feature>
+		<feature>federatedRegistry-1.0</feature>
+	</featureManager>
+
+	<!-- For the keystore, default keys are generated and stored in a keystore. To provide the keystore password, generate an 
+		encoded password using bin/securityUtility encode and add it below in the password attribute of the keyStore element. -->
+	<ssl id="defaultSSLConfig" 
+		 sslProtocol="TLS"
+		 keyStoreRef="defaultKeyStore"/>
+	<keyStore id="defaultKeyStore" password="{xor}Oz09azkqMQ=="/>
+
+	<include location="basicUserRegistry.xml"/>
+	<!--include location="ldapUserRegistry.xml"/-->
+
+	<!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+	<httpEndpoint  host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+
+	<!-- Automatically expand WAR files and EAR files -->
+	<applicationManager autoExpand="true"/>
+
+	<jdbcDriver id="derbyJDBCdriver">
+		<library name="DerbyLib">
+			<fileset dir="${server.config.dir}/derby/lib" includes="derby.jar" />
+		</library>
+	</jdbcDriver>
+	<dataSource id="dbbConnection" jdbcDriverRef="derbyJDBCdriver" jndiName="jdbc/dbbConnection">
+		<properties.derby.embedded createDatabase="create" databaseName="DBB_DATABASE" />
+	</dataSource>
+
+	<!-- This is an example for using DB2 LUW as the database server -->
+	<!-- jdbcDriver id="db2JDBCdriver">
+		<library name="DB2Lib">
+			<fileset dir="${shared.resource.dir}/db2" includes="*.jar"/>
+		</library>
+	</jdbcDriver>
+	<dataSource id="dbbConnection" jdbcDriverRef="db2JDBCdriver" jndiName="jdbc/dbbConnection" transactional="false">
+		<properties.db2.jcc databaseName="DBB" password="{xor}Oz1tNjEsK24=" portNumber="50000" serverName="localhost" user="db2inst1"/>
+	</dataSource-->
+	
+	<!-- This is an example for using DB2z as the database server -->
+	<!-- jdbcDriver id="db2zJDBCdriver">
+		<library name="DB2Lib">
+			<fileset dir="${shared.resource.dir}/db2" includes="*.jar"/>
+		</library>
+	</jdbcDriver>
+	<dataSource id="dbbConnection" jdbcDriverRef="db2zJDBCdriver" jndiName="jdbc/dbbConnection" transactional="false">
+		<properties.db2.jcc driverType="4" serverName="localhost" portNumber="8070" user="db2adm" password="{xor}LSs8azkqMQ==" databaseName="MVS269DB"/>
+	</dataSource -->
+
+	<!-- This is an example for using DB2i as the database server -->
+	<!-- jdbcDriver id="db2iJDBCdriver">
+		<library name="DB2iLib">
+			<fileset dir="${shared.resource.dir}/db2i" includes="jt400.jar"/>
+		</library>
+	</jdbcDriver>
+	<dataSource id="dbbConnection" jdbcDriverRef="db2iJDBCdriver" jndiName="jdbc/dbbConnection" transactional="false">
+		<properties.db2.i.toolbox serverName="localhost" user="DB2IADMIN" password="{xor}Gx1tFh4bEg8IGw==" databaseName="DBBZ" />
+	</dataSource -->
+
+	<httpSession invalidateOnUnauthorizedSessionRequestException="true" cookieSecure="true"/>
+	<webAppSecurity ssoRequiresSSL="true" singleSignonEnabled="false"/>
+
+	<administrator-role>
+		<user>ADMIN</user>
+		<group>DBBAdmins</group>
+	</administrator-role>
+
+	<applicationMonitor updateTrigger="mbean"/>
+	<transaction totalTranLifetimeTimeout="240s"/>
+	<jndiEntry jndiName="com/ibm/dbb/properties/file" value="${server.config.dir}dbb.properties"/>
+
+	<osgiApplication id="dbb" location="dbb.eba" name="dbb">
+		<application-bnd>
+			<security-role name="DBBAdmins">
+				<group name="DBBAdmins" />
+			</security-role>
+			<security-role name="DBBUsers">
+				<group name="DBBUsers" />
+			</security-role>
+			<security-role name="DBBGuests">
+				<group name="DBBGuests"/>
+			</security-role>
+		</application-bnd>
+	</osgiApplication>
+
+	<!--  suppress messages about references to missing third party jars that are not used -->
+	<!--  suppress JPA warnings about existing constraints -->
+	<logging hideMessage="SRVE9967W,CWWJP9991W"/>
+</server>

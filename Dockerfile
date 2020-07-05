@@ -96,7 +96,7 @@ RUN cd ${DBB_HOME} && \
     tar -zxvf dbb-server-1.0.9.tar.gz \
     rm -f dbb-server-${DBB_VERSION}.tar.gz \
     ls -ltr
-
+COPY server.xml ${DBB_HOME}/wlp/usr/servers/dbb
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
