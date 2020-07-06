@@ -2,7 +2,8 @@
 # @author Ashish Sahoo (ashissah@in.ibm.com)
 ############################################################################
 #Environment Variables                                                     # 
-export port_range=8080,9080,9443,50000
+export port_range=8080,9443,50000
+export kluster=mycluster-free
 ############################################################################
 #
 ############################################################################
@@ -40,8 +41,9 @@ if [ $? -ne 0 ]; then
   ibmcloud cr namespace-add "$icp_name"
 else
   echo "Name-space exist in IBM Cloud container registry, Deleting and Adding them now"
-  ibmcloud cr namespace-rm "$icp_name" -f
-  ibmcloud cr namespace-add "$icp_name"
+  # ibmcloud cr namespace-rm "$icp_name" -f
+  # ibmcloud cr namespace-add "$icp_name"
+  kubectl rollout status -w deployment/"$git_repo"
 fi
 ############################################################################
 # Build image with dockerfile in Cloud Registry                            #
@@ -64,22 +66,23 @@ docker push us.icr.io/"$icp_name"/"$git_repo"
 ############################################################################
 # Start the deployment details using kubectl                               #
 ############################################################################
-ibmcloud ks cluster config --cluster mycluster-free
+ibmcloud ks cluster config --cluster "$kluster"
 kubectl config current-context
 #
 echo 'Deleting the deployment' $git_repo
 kubectl delete -n default pod "$git_repo"
 kubectl delete -n default deployment "$git_repo" 
+
 #
 if [ $? -ne 0 ]; then
   echo "Deployment does not exist in IBM Cloud container registry, Adding them now"
   kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
-  kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
+  # kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
 else
   echo "Deployment does exist in IBM Cloud container registry, Adding them now as deleted"
   kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
   echo "Run Deployment Start"
-  kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
+  # kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
   echo "Run Deployment Ends"
 fi
 ############################################################################
@@ -97,7 +100,7 @@ fi
 ############################################################################
   ibmcloud ks cluster ls
   kubectl describe deployments x86-r-z-appln
-  ibmcloud ks worker ls --cluster mycluster-free
+  ibmcloud ks worker ls --cluster "$kluster"
   kubectl describe service "$git_repo"-node
 ############################################################################
 # Create Short url from Node/Node-port                                     #
