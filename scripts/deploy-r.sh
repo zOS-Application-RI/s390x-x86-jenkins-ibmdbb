@@ -16,7 +16,7 @@ docker push "$DOCKER_USERNAME"/$git_repo:latest
 # Log into the IBM Cloud environment using apikey                          #
 ############################################################################
 echo "Login to IBM Cloud using apikey"
-ibmcloud login -a https://cloud.ibm.com --apikey ${IC_API_KEY} -r us-south
+ibmcloud login -a https://cloud.ibm.com --apikey ${CF_API_KEY} -r us-south
 if [ $? -ne 0 ]; then
   echo "Failed to authenticate to IBM Cloud"
   exit 1
@@ -43,6 +43,7 @@ else
   echo "Name-space exist in IBM Cloud container registry, Deleting and Adding them now"
   # ibmcloud cr namespace-rm "$icp_name" -f
   # ibmcloud cr namespace-add "$icp_name"
+  ibmcloud cr image-rm us.icr.io/"$icp_name"/"$git_repo"
   kubectl rollout status -w deployment/"$git_repo"
 fi
 ############################################################################
@@ -76,13 +77,13 @@ kubectl delete -n default deployment "$git_repo"
 #
 if [ $? -ne 0 ]; then
   echo "Deployment does not exist in IBM Cloud container registry, Adding them now"
-  kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
-  # kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
+  # kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
+  kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
 else
   echo "Deployment does exist in IBM Cloud container registry, Adding them now as deleted"
-  kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
+  # kubectl create deployment $git_repo --image=us.icr.io/"$icp_name"/"$git_repo" 
   echo "Run Deployment Start"
-  # kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
+   kubectl run $git_repo --image=us.icr.io/"$icp_name"/"$git_repo"
   echo "Run Deployment Ends"
 fi
 ############################################################################
