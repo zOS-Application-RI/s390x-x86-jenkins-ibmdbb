@@ -81,6 +81,7 @@ RUN mkdir -p $DBB_HOME && \
     tar -xvf dbb-server-1.0.9.tar.gz 
 RUN chmod +x /var/dbb_home/wlp/bin/
 COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
+RUN chmod 777 /var/dbb_home/wlp/usr/servers/dbb/server.xml
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
@@ -102,19 +103,18 @@ RUN chmod 777 /var/log/supervisord/
 #
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
+RUN chmod 777 $JENKINS_HOME
+RUN chmod 777 $DBB_HOME
 VOLUME $JENKINS_HOME
 VOLUME $DBB_HOME
-
 # for main web interface:
 EXPOSE ${http_port}
-
+#
 # will be used by attached slave agents:
 EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
-
 #  USER ${user}
-#
 #
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
