@@ -75,11 +75,11 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN mkdir -p $DBB_HOME && \
-    && chown ${uid}:${gid} $DBB_HOME && \
-    chown -R ${user} "$DBB_HOME" \
-    cd $DBB_HOME && \
-    curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
+RUN mkdir -p $DBB_HOME \
+    && chown ${uid}:${gid} $DBB_HOME \
+    && chown -R ${user} "$DBB_HOME" \
+    && cd $DBB_HOME \
+    && curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
     tar -xvf dbb-server-1.0.9.tar.gz 
 RUN chmod +x /var/dbb_home/wlp/bin/
 COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
