@@ -95,13 +95,15 @@ RUN chmod +x /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh
 # Copy further configuration files into the Docker image
+RUN chmod 777 /var/log
 COPY /supervisord.conf /etc/
 RUN mkdir -p /var/log/supervisord/ 
+RUN chmod 777 /var/log/supervisord/ 
 #
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
-# VOLUME $JENKINS_HOME
-# VOLUME $DBB_HOME
+VOLUME $JENKINS_HOME
+VOLUME $DBB_HOME
 
 # for main web interface:
 EXPOSE ${http_port}
