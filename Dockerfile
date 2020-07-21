@@ -119,4 +119,4 @@ EXPOSE ${agent_port}
 EXPOSE ${dbb_port}
 USER ${user}
 #
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
