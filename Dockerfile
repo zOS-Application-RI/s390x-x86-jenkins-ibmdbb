@@ -117,6 +117,6 @@ EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
-USER ${user}
+# USER ${user}
 #
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
