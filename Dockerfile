@@ -9,6 +9,13 @@ RUN apt-get update && \
     apt-get install -y git-lfs && \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
+#
+# Jenkins home directory is a volume, so configuration and build history
+# can be persisted and survive image upgrades
+VOLUME $JENKINS_HOME
+VOLUME $DBB_HOME
+RUN chmod 777 $JENKINS_HOME
+RUN chmod 777 $DBB_HOME
 ################################################################################################
 ################################################################################################
 ################################################################################################
@@ -41,7 +48,6 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 ENV JENKINS_UC https://updates.jenkins.io
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
-
 ################################################################################################
 #########################################JENKINS################################################                                                 
 ################################################################################################
@@ -103,13 +109,7 @@ RUN chmod 777 /etc/supervisord.conf
 RUN mkdir -p /var/log/supervisord/ 
 RUN chmod 777 /var/log
 RUN chmod 777 /var/log/supervisord/ 
-#
-# Jenkins home directory is a volume, so configuration and build history
-# can be persisted and survive image upgrades
-VOLUME $JENKINS_HOME
-VOLUME $DBB_HOME
-RUN chmod 777 $JENKINS_HOME
-RUN chmod 777 $DBB_HOME
+
 # for main web interface:
 EXPOSE ${http_port}
 #
@@ -120,4 +120,5 @@ EXPOSE ${agent_port}
 EXPOSE ${dbb_port}
 # USER ${user}
 #
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
