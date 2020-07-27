@@ -87,6 +87,7 @@ RUN chown ${uid}:${gid} $DBB_HOME \
 RUN chmod +x /var/dbb_home/wlp/bin/
 COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
 RUN chmod 777 /var/dbb_home/wlp/usr/servers/dbb/server.xml
+RUN chmod 777 /var/dbb_home/wlp/usr/servers/
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
