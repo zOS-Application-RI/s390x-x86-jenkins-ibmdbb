@@ -47,13 +47,12 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 ################################################################################################
 # # Jenkins home directory is a volume, so configuration and build history
 # # can be persisted and survive image upgrades
+# VOLUME $JENKINS_HOME
+# VOLUME $DBB_HOME
 RUN mkdir -p $JENKINS_HOME \
     && mkdir -p $DBB_HOME \
     && chmod 777 $JENKINS_HOME \
     && chmod 777 $DBB_HOME
-VOLUME $JENKINS_HOME
-VOLUME $DBB_HOME
-
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
