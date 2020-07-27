@@ -124,4 +124,3 @@ EXPOSE ${dbb_port}
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 # ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 USER ${user}
-RUN chmod 777 /home/jenkins/
