@@ -9,13 +9,15 @@ RUN apt-get update && \
     apt-get install -y git-lfs && \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
-#
-# Jenkins home directory is a volume, so configuration and build history
-# can be persisted and survive image upgrades
+# #
+# # Jenkins home directory is a volume, so configuration and build history
+# # can be persisted and survive image upgrades
+RUN mkdir -p $JENKINS_HOME \
+    && mkdir -p $DBB_HOME \
+    && chmod 777 $JENKINS_HOME \
+    && chmod 777 $DBB_HOME
 VOLUME $JENKINS_HOME
 VOLUME $DBB_HOME
-RUN chmod 777 $JENKINS_HOME
-RUN chmod 777 $DBB_HOME
 ################################################################################################
 ################################################################################################
 ################################################################################################
@@ -54,8 +56,7 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-RUN mkdir -p $JENKINS_HOME \
-    && chown ${uid}:${gid} $JENKINS_HOME \
+RUN chown ${uid}:${gid} $JENKINS_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
@@ -81,8 +82,7 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN mkdir -p $DBB_HOME \
-    && chown ${uid}:${gid} $DBB_HOME \
+RUN chown ${uid}:${gid} $DBB_HOME \
     && chown -R ${user} "$DBB_HOME" \
     && cd $DBB_HOME \
     && curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
