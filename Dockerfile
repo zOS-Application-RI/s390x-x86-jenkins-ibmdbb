@@ -45,10 +45,7 @@ ENV JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 ################################################################################################
 #########################################JENKINS################################################                                                 
 ################################################################################################
-# # Jenkins home directory is a volume, so configuration and build history
-# # can be persisted and survive image upgrades
-# VOLUME $JENKINS_HOME
-# VOLUME $DBB_HOME
+
 RUN mkdir -p $JENKINS_HOME \
     && mkdir -p $DBB_HOME \
     && chmod 777 $JENKINS_HOME \
@@ -109,7 +106,10 @@ RUN chmod 777 /etc/supervisord.conf
 RUN mkdir -p /var/log/supervisord/ 
 RUN chmod 777 /var/log
 RUN chmod 777 /var/log/supervisord/ 
-
+# # Jenkins home directory is a volume, so configuration and build history
+# # can be persisted and survive image upgrades
+VOLUME $JENKINS_HOME
+VOLUME $DBB_HOME
 # for main web interface:
 EXPOSE ${http_port}
 #
