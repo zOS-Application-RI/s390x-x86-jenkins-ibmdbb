@@ -110,7 +110,7 @@ RUN chmod 777 /var/log/supervisord/
 # # Jenkins home directory is a volume, so configuration and build history
 # # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
-VOLUME $DBB_HOME
+# VOLUME $DBB_HOME
 # for main web interface:
 EXPOSE ${http_port}
 #
@@ -119,7 +119,7 @@ EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
-# USER ${user}
+USER ${user}
 #
 # ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
