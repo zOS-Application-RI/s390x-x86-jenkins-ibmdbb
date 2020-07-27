@@ -1,4 +1,4 @@
-arch: s390x
+# arch: s390x
 services:
 - docker
 # before_install:

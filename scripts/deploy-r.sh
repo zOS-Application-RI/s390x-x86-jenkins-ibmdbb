@@ -4,13 +4,14 @@
 #Environment Variables                                                     # 
 export port_range=8080,9443,50000
 export kluster=mycluster-free
+export ARCH=`uname -m`
 ############################################################################
 #
 ############################################################################
 #                 DOCKER HUB IMAGE PUSH                                    #
 ############################################################################
 echo "Docker Push Images"
-docker push "$DOCKER_USERNAME"/$git_repo:$TRAVIS_BRANCH-$DEPLOY_TIMESTAMP-$TRAVIS_BUILD_NUMBER
+docker push "$DOCKER_USERNAME"/$git_repo:$ARCH-$TRAVIS_BRANCH-$DEPLOY_TIMESTAMP-$TRAVIS_BUILD_NUMBER
 docker push "$DOCKER_USERNAME"/$git_repo:latest
 ############################################################################
 # Log into the IBM Cloud environment using apikey                          #
