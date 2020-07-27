@@ -119,7 +119,9 @@ EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
-USER ${user}
+
 #
-# ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+USER ${user}
+RUN chmod 777 /home/jenkins/
