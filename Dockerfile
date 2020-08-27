@@ -31,10 +31,10 @@ ENV REF $REF
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.249}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.254}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=229bd71c7b96d1ae0290a3465dee21eac20b7fe494598e807fcef60a9e7c9638
+ARG JENKINS_SHA=467ba78421c77fad846c8749332a028c7c594cfdd52148134c333160f3804a96
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
