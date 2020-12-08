@@ -120,8 +120,12 @@ EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
+######
+ADD keygen.sh /opt/keygen.sh
+RUN chmod 755 /opt/keygen.sh
 
-#
+CMD ["/opt/keygen.sh"]
+######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 # ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 USER ${user}
