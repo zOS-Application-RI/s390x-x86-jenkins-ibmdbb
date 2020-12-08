@@ -31,10 +31,10 @@ ENV REF $REF
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.254}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.270}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=467ba78421c77fad846c8749332a028c7c594cfdd52148134c333160f3804a96
+ARG JENKINS_SHA=64b4168a9168d07f282bf98021dff634ab2c9338b5db77b66b320708089db7fc
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -56,6 +56,7 @@ RUN mkdir -p $JENKINS_HOME \
 RUN chown ${uid}:${gid} $JENKINS_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
 
 # $REF (defaults to `/usr/share/jenkins/ref/`) contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
