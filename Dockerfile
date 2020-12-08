@@ -57,7 +57,9 @@ RUN chown ${uid}:${gid} $JENKINS_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
-
+###########Omit this line $$$$
+RUN echo "jenkins:jenkins" | chpasswd
+##############################
 # $REF (defaults to `/usr/share/jenkins/ref/`) contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
 # or config file with your custom jenkins Docker image.
