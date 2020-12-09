@@ -1,4 +1,12 @@
 #! /bin/bash -e
+# Ensure that assigned uid has entry in /etc/passwd.
+
+if [ `id -u` -ge 10000 ]; then
+ cat /etc/passwd | sed -e "s/^jenkins:/builder:/" > /tmp/passwd
+ echo "jenkins:x:`id -u`:`id -g`:,,,:/var/jenkins_home" >> /tmp/passwd
+ cat /tmp/passwd > /etc/passwd
+ rm /tmp/passwd
+ fi
 
 : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
 : "${JENKINS_HOME:="/var/jenkins_home"}"
