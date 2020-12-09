@@ -3,8 +3,8 @@ sleep 600
 KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
 PRIVATE_KEY=$KEYS_PATH/id_rsa
 PUBLIC_KEY=${PRIVATE_KEY}.pub
-UID=${UID:-0}
-GUI=${GUI:-0}
+UID=${UID:-1000}
+GUI=${GUI:-1000}
 
 if [ ! -f "$PRIVATE_KEY" ]; then
   /usr/bin/ssh-keygen -q -t rsa -N '' -f $PRIVATE_KEY
