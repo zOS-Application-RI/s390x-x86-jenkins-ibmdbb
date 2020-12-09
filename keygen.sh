@@ -12,6 +12,8 @@ if [ ! -f "$PRIVATE_KEY" ]; then
   chmod 600 $PRIVATE_KEY
   chown -R $UID:$GID $KEYS_PATH
 fi
+cat /var/jenkins_home/.ssh/id_rsa.pub >> /tmp/id_rsa.pub \
+    && chmod 744 /tmp/id_rsa.pub
 
 echo "========= PUBLIC KEY ============"
 cat $PUBLIC_KEY
