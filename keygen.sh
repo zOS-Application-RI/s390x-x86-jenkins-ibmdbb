@@ -1,4 +1,5 @@
 #!/bin/sh
+sleep 600
 KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
 PRIVATE_KEY=$KEYS_PATH/id_rsa
 PUBLIC_KEY=${PRIVATE_KEY}.pub
