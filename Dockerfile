@@ -24,11 +24,16 @@ ARG JENKINS_HOME=/var/jenkins_home
 ARG DBB_HOME=/var/dbb_home
 ARG DBB_VERSION=1.0.9
 ARG REF=/usr/share/jenkins/ref
+ARG KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
+ARG PRIVATE_KEY=$KEYS_PATH/id_rsa
+ARG PUBLIC_KEY=${PRIVATE_KEY}.pub
 
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
-
+ENV KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
+ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
+ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
 ENV JENKINS_VERSION ${JENKINS_VERSION:-2.270}
@@ -56,9 +61,9 @@ RUN mkdir -p $JENKINS_HOME \
 RUN chown ${uid}:${gid} $JENKINS_HOME \
     && groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
-RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
-###########Omit this line $$$$
-RUN echo "jenkins:jenkins" | chpasswd
+# RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
+# ###########Omit this line $$$$
+# RUN echo "jenkins:jenkins" | chpasswd
 ##############################
 # $REF (defaults to `/usr/share/jenkins/ref/`) contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
@@ -114,6 +119,25 @@ RUN chmod 777 /var/log/supervisord/
 # # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
 # VOLUME $DBB_HOME
+##############################################################################
+##############################################################################
+##############################################################################
+# Add SSH key to jenkins
+RUN mkdir -p /var/jenkins_home/.ssh \
+    && /usr/bin/ssh-keygen -q -t rsa -N '' -f $PRIVATE_KEY \
+    && chmod 700 $KEYS_PATH \
+    && chmod 644 $PUBLIC_KEY \
+    && chmod 600 $PRIVATE_KEY \
+    && ssh-keyscan -t rsa github.com >> $KEYS_PATH/known_hosts \
+    && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
+    && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
+    && mkdir -p /.ssh \
+    && cp -r $KEYS_PATH/* /.ssh \
+    && chown -R ${uid}:${gid} $KEYS_PATH \
+    && chmod 700 /.ssh 
+##############################################################################
+##############################################################################
+##############################################################################     
 # for main web interface:
 EXPOSE ${http_port}
 #
@@ -123,10 +147,6 @@ EXPOSE ${agent_port}
 # will be used by dbb web server:
 EXPOSE ${dbb_port}
 ######
-ADD keygen.sh /opt/keygen.sh
-RUN chmod 755 /opt/keygen.sh
-
-#CMD ["/opt/keygen.sh"]
 ######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 # ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
