@@ -12,6 +12,7 @@ export kluster=mycluster-free
 ############################################################################
 echo "Docker Push Images"
 docker push "$DOCKER_USERNAME"/$git_repo:$ARCH-$TRAVIS_BRANCH-$DEPLOY_TIMESTAMP-$TRAVIS_BUILD_NUMBER
+docker push "$DOCKER_USERNAME"/$git_repo:$ARCH
 docker push "$DOCKER_USERNAME"/$git_repo:latest
 # ############################################################################
 # # Log into the IBM Cloud environment using apikey                          #
