@@ -23,6 +23,7 @@ before_deploy:
 # - export icp_name="$git_repo"-icp
 - docker build -t $git_repo -f Dockerfile .
 - docker tag  $git_repo "$DOCKER_USERNAME"/$git_repo:$ARCH-$TRAVIS_BRANCH-$DEPLOY_TIMESTAMP-$TRAVIS_BUILD_NUMBER
+- docker tag  $git_repo "$DOCKER_USERNAME"/$git_repo:$ARCH
 - docker tag  $git_repo "$DOCKER_USERNAME"/$git_repo:latest
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 deploy:
