@@ -3,6 +3,7 @@ FROM ubuntu
 ################################################################################################
 ################################################################################################
 ################################################################################################
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y git curl wget ca-certificates supervisor openjdk-11-jdk && \
@@ -29,7 +30,7 @@ ARG KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
 ARG PRIVATE_KEY=$KEYS_PATH/id_rsa
 ARG PUBLIC_KEY=${PRIVATE_KEY}.pub
 
-ENV DEBIAN_FRONTEND noninteractive
+
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
@@ -89,17 +90,21 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 ################################################################################################
 ################################IBM DBB Web Server##############################################                                                 
 ################################################################################################
-RUN chown ${uid}:${gid} $DBB_HOME \
-    && chown -R ${user} "$DBB_HOME" \
-    && cd $DBB_HOME \
-    && curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
-    tar -xvf dbb-server-1.0.9.tar.gz 
-RUN chmod +x /var/dbb_home/wlp/bin/
-COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
-RUN chmod 777 /var/dbb_home/wlp/usr/servers/dbb/server.xml
-RUN chmod 777 /var/dbb_home/wlp/usr/servers/
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+## Removing DBB due to Open Java issue 
+
+# RUN chown ${uid}:${gid} $DBB_HOME \
+#     && chown -R ${user} "$DBB_HOME" \
+#     && cd $DBB_HOME \
+#     && curl -fsSL https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/aqua31/dbb/1.0.9/dbb-server-1.0.9.tar.gz -o /var/dbb_home/dbb-server-1.0.9.tar.gz  && \
+#     tar -xvf dbb-server-1.0.9.tar.gz 
+# RUN chmod +x /var/dbb_home/wlp/bin/
+# COPY server.xml /var/dbb_home/wlp/usr/servers/dbb/
+# RUN chmod 777 /var/dbb_home/wlp/usr/servers/dbb/server.xml
+# RUN chmod 777 /var/dbb_home/wlp/usr/servers/
+# COPY start.sh /usr/local/bin/start.sh
+# RUN chmod +x /usr/local/bin/start.sh
+#################################################################################################
+
 COPY jenkins-support /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
@@ -140,7 +145,11 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && mkdir -p /.ssh \
     && cp -r $KEYS_PATH/* /.ssh \
     && chown -R ${uid}:${gid} $KEYS_PATH \
-    && chmod -R 777 /.ssh 
+    && chmod -R 777 /.ssh \
+    # Fix git path issue for mainframe(zEUS Lnk)
+    && mkdir -p /etc/git/bin \
+    && chmod -R +x /etc/git/bin \
+    && cp /usr/bin/git /etc/git/bin/
 ##############################################################################
 ##############################################################################
 ##############################################################################     
@@ -151,7 +160,7 @@ EXPOSE ${http_port}
 EXPOSE ${agent_port}
 #
 # will be used by dbb web server:
-EXPOSE ${dbb_port}
+# EXPOSE ${dbb_port}
 ######
 ######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
