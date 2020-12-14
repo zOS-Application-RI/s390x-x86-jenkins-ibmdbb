@@ -1,10 +1,11 @@
-FROM ibmjava:latest
+FROM ubuntu
+#FROM ibmjava
 ################################################################################################
 ################################################################################################
 ################################################################################################
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git curl wget ca-certificates supervisor && \
+    apt-get install -y git curl wget ca-certificates supervisor openjdk-11-jdk && \
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git-lfs && \
     git lfs install && \
@@ -132,8 +133,8 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa 198.86.33.83 >> $KEYS_PATH/known_hosts \
+#    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
+#    && ssh-keyscan -t rsa 198.86.33.83 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.81.193.67 >> $KEYS_PATH/known_hosts \
     && mkdir -p /.ssh \
     && cp -r $KEYS_PATH/* /.ssh \
