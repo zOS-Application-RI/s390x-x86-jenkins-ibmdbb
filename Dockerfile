@@ -5,7 +5,7 @@ FROM ubuntu
 ################################################################################################
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git curl wget ca-certificates supervisor openjdk-11-jdk && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git curl wget ca-certificates supervisor openjdk-11-jdk && \
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git-lfs && \
     git lfs install && \
@@ -29,6 +29,7 @@ ARG KEYS_PATH=${KEYS_PATH:-/var/jenkins_home/.ssh}
 ARG PRIVATE_KEY=$KEYS_PATH/id_rsa
 ARG PUBLIC_KEY=${PRIVATE_KEY}.pub
 
+ENV DEBIAN_FRONTEND noninteractive
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
