@@ -149,7 +149,7 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     # Fix git path issue for mainframe(zEUS Lnk)
     && mkdir -p /etc/git/bin \
     && chmod -R +x /etc/git/bin \
-    && ln -s /usr/bin/git /etc/git/bin/git
+    && ln -f -s /usr/bin/git /etc/git/bin/git
 ##############################################################################
 ##############################################################################
 ##############################################################################     
