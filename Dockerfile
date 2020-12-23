@@ -126,9 +126,7 @@ RUN chmod 777 /etc/supervisord.conf
 RUN mkdir -p /var/log/supervisord/ 
 RUN chmod 777 /var/log
 RUN chmod 777 /var/log/supervisord/ 
-# # Jenkins home directory is a volume, so configuration and build history
-# # can be persisted and survive image upgrades
-VOLUME $JENKINS_HOME
+
 # VOLUME $DBB_HOME
 ##############################################################################
 ##############################################################################
@@ -157,6 +155,9 @@ RUN mkdir -p /var/jenkins_home/.ssh \
 ##############################################################################
 ##############################################################################
 ##############################################################################     
+# # Jenkins home directory is a volume, so configuration and build history
+# # can be persisted and survive image upgrades
+VOLUME $JENKINS_HOME
 # for main web interface:
 EXPOSE ${http_port}
 #
