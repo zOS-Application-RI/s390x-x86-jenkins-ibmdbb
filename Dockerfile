@@ -167,6 +167,12 @@ EXPOSE ${agent_port}
 # will be used by dbb web server:
 # EXPOSE ${dbb_port}
 ######
+USER ${user}
+RUN ansible-galaxy collection install ibm.ibm_zos_core -p ${JENKINS_HOME} && \
+    ansible-galaxy collection install ibm.ibm_zos_zosmf -p ${JENKINS_HOME} && \
+    ansible-galaxy collection install ibm.ibm_zos_sysauto -p ${JENKINS_HOME} && \
+    ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME}
+USER root
 ######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 # ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
