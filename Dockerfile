@@ -43,10 +43,10 @@ ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
 ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.275}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.276}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=2db5deb9f119bc955ba0922b7cb239d9e18ab1000ec44493959b600f6ecda2d3
+ARG JENKINS_SHA=d3892390eda022bbee648f226d5b9b2806a11016d0bdf691200855361fe185a0
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -171,7 +171,11 @@ USER ${user}
 RUN ansible-galaxy collection install ibm.ibm_zos_core -p ${JENKINS_HOME} && \
     ansible-galaxy collection install ibm.ibm_zos_zosmf -p ${JENKINS_HOME} && \
     ansible-galaxy collection install ibm.ibm_zos_sysauto -p ${JENKINS_HOME} && \
-    ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME}
+    ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME} && \
+    cd ${JENKINS_HOME} && mkdir zconbt && cd zconbt && \
+    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/updates/zconbt.zip && \
+    jar -xf zconbt.zip && \
+    chown -R ${user} "$JENKINS_HOME" "$REF" 
 USER root
 ######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
