@@ -26,6 +26,7 @@ ARG gid=1000
 ARG http_port=8080
 ARG agent_port=50000
 ARG dbb_port=9443
+ARG ANSIBLE_HOME=
 ARG JENKINS_HOME=/var/jenkins_home
 ARG DBB_HOME=/var/dbb_home
 ARG DBB_VERSION=1.0.9
@@ -43,10 +44,10 @@ ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
 ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.277}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.278}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=bc5ca0002d7db14cfc5a728e5fc2a32ef943795cbed194e702fded87cc04d255
+ARG JENKINS_SHA=c0a477ece3651819346a76ae86382dc32309510ceb3f2f6713a5a4cf4f046957
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -140,7 +141,7 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && ssh-keyscan -t rsa github.com >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
-    # && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts \
+    && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.86.33.83 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.81.193.67 >> $KEYS_PATH/known_hosts \
@@ -148,6 +149,10 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && cp -r $KEYS_PATH/* /.ssh \
     && chown -R ${uid}:${gid} $KEYS_PATH \
     && chmod -R 777 /.ssh \
+    # Ansible home setup
+    && mkdir -p /.ansible \
+    && chown -R ${uid}:${gid} /.ansible \
+    && chmod -R 777 /.ansible \
     # Fix git path issue for mainframe(zEUS Lnk)
     && mkdir -p /etc/git/bin \
     && chmod -R +x /etc/git/bin \
