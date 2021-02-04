@@ -109,7 +109,6 @@ RUN chown -R ${user} "$JENKINS_HOME" "$REF"
 # COPY start.sh /usr/local/bin/start.sh
 # RUN chmod +x /usr/local/bin/start.sh
 #################################################################################################
-
 COPY jenkins-support /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
