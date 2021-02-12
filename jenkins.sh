@@ -1,4 +1,14 @@
 #! /bin/bash -e
+#  Ashish's Added for owner change
+#########################################################################################
+if [ `id -u` -ge 10000 ]; then
+ cat /etc/passwd | sed -e "s/^jenkins:/builder:/" > /tmp/passwd
+ echo "jenkins:x:`id -u`:`id -g`:,,,:/var/jenkins_home:/bin/bash" >> /tmp/passwd
+ cat /tmp/passwd > /etc/passwd
+ rm /tmp/passwd
+ fi
+#########################################################################################
+#
 : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
 : "${JENKINS_HOME:="/var/jenkins_home"}"
 : "${COPY_REFERENCE_FILE_LOG:="${JENKINS_HOME}/copy_reference_file.log"}"
@@ -35,6 +45,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
 
   exec java -Duser.home="$JENKINS_HOME" "${java_opts_array[@]}" -jar ${JENKINS_WAR} "${jenkins_opts_array[@]}" "$@"
 fi
+# 
 
 # As argument is not jenkins, assume user want to run his own process, for example a `bash` shell to explore this image
 exec "$@"
