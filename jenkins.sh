@@ -1,12 +1,12 @@
 #! /bin/bash -e
 #  Ashish's Added for owner change
 #########################################################################################
-if [ `id -u` -ge 10000 ]; then
- cat /etc/passwd | sed -e "s/^jenkins:/builder:/" > /tmp/passwd
- echo "jenkins:x:`id -u`:`id -g`:,,,:/var/jenkins_home:/bin/bash" >> /tmp/passwd
- cat /tmp/passwd > /etc/passwd
- rm /tmp/passwd
- fi
+# if [ `id -u` -ge 10000 ]; then
+#  cat /etc/passwd | sed -e "s/^jenkins:/builder:/" > /tmp/passwd
+#  echo "jenkins:x:`id -u`:`id -g`:,,,:/var/jenkins_home:/bin/bash" >> /tmp/passwd
+#  cat /tmp/passwd > /etc/passwd
+#  rm /tmp/passwd
+#  fi
 #########################################################################################
 #
 : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
