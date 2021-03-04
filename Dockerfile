@@ -135,6 +135,7 @@ RUN chmod 777 /var/log/supervisord/
 ##############################################################################
 ##############################################################################
 # Add SSH key to jenkins
+USER ${user}
 RUN mkdir -p /var/jenkins_home/.ssh \
     && /usr/bin/ssh-keygen -q -t rsa -N '' -f $PRIVATE_KEY \
     && chmod 700 $KEYS_PATH \
@@ -142,12 +143,13 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && chmod 600 $PRIVATE_KEY \
     && ssh-keyscan -t rsa github.com >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
-    # && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
-    # && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts \
+    && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
+    && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts 
 #    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.86.33.83 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.81.193.67 >> $KEYS_PATH/known_hosts \
-    && mkdir -p /.ssh \
+USER root
+RUN mkdir -p /.ssh \
     && cp -r $KEYS_PATH/* /.ssh \
     && chown -R ${uid}:${gid} $KEYS_PATH \
     && chmod -R 777 /.ssh \
@@ -181,10 +183,10 @@ RUN ansible-galaxy collection install ibm.ibm_zos_core -p ${JENKINS_HOME} && \
     ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME} && \
     cd ${JENKINS_HOME} && mkdir zconbt && cd zconbt && \
     wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/updates/zconbt.zip && \
-    jar -xf zconbt.zip && \
-    chown -R ${user} "$JENKINS_HOME" "$REF" 
+    jar -xf zconbt.zip 
+    
 USER root
+RUN chown -R ${user} "$JENKINS_HOME" "$REF" 
 ######
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 # ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-# USER ${user}
