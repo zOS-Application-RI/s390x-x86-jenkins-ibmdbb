@@ -44,10 +44,10 @@ ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
 ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.282}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.284}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=8a8a141f3ff7c0008ad98c04449ace6cc5321698fa71164a3c98505a6ac6dd62
+ARG JENKINS_SHA=f014255f0a9375f9abefced07c88525a01ffcb478bd3f76c93d42f1d91ef1d44
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
