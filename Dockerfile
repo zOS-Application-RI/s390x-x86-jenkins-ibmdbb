@@ -1,6 +1,7 @@
 FROM ubuntu
 #FROM ibmjava
 ################################################################################################
+LABEL maintainer="ashissah@in.ibm.com"
 ################################################################################################
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata xsltproc sshpass maven
 ENV TZ=Asia/Kolkata
@@ -44,13 +45,14 @@ ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
 ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.288}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.303.3}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=1da9936168a6fe1b8c5c707cdecb6dbacae2811e3a62d0fb5b01a33d114c22e6
+ARG JENKINS_SHA=8a6ae7367755b3f31a050faa945f7a3991abdb43d941c7294cac890c1e2779d8
 
 # Can be used to customize where jenkins.war get downloaded from
-ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
+# ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
+ARG JENKINS_URL=https://updates.jenkins.io/download/war/${JENKINS_VERSION}/jenkins.war
 
 ENV JENKINS_UC https://updates.jenkins.io
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
