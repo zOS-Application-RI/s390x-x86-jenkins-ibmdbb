@@ -3,7 +3,8 @@ FROM ubuntu
 ################################################################################################
 LABEL maintainer="ashissah@in.ibm.com"
 ################################################################################################
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata xsltproc sshpass maven
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata xsltproc sshpass maven \
+    &&  rm -rf /var/lib/apt/lists/*
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
