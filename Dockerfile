@@ -44,10 +44,10 @@ ENV PRIVATE_KEY=$KEYS_PATH/id_rsa
 ENV PUBLIC_KEY=${PRIVATE_KEY}.pub
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.288}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.298}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=1da9936168a6fe1b8c5c707cdecb6dbacae2811e3a62d0fb5b01a33d114c22e6
+ARG JENKINS_SHA=448bce07af6aa287892ea5abda5d0a4cdcff7b2255918a3accd00322077b5162
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -142,7 +142,7 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && chmod 644 $PUBLIC_KEY \
     && chmod 600 $PRIVATE_KEY \
     && ssh-keyscan -t rsa github.com >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
+    # && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
     && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts 
 #    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
