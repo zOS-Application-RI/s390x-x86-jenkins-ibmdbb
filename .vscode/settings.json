@@ -1,3 +1,4 @@
 {
-     "travis.pro": true
+     "travis.pro": true,
+     "WhiteSource Advise.Diff.BaseBranch": "master"
 }
