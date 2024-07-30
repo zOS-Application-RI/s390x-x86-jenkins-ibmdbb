@@ -171,9 +171,9 @@ RUN mkdir -p /var/jenkins_home/.ssh \
     && chmod 644 $PUBLIC_KEY \
     && chmod 600 $PRIVATE_KEY \
     && ssh-keyscan -t rsa github.com >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
-    && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts 
+    && ssh-keyscan -t rsa github.ibm.com >> $KEYS_PATH/known_hosts 
+    # && ssh-keyscan -t rsa 192.86.33.143 >> $KEYS_PATH/known_hosts \
+    # && ssh-keyscan -t rsa 192.86.33.53 >> $KEYS_PATH/known_hosts 
 #    && ssh-keyscan -t rsa 198.86.33.174 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.86.33.83 >> $KEYS_PATH/known_hosts \
 #    && ssh-keyscan -t rsa 198.81.193.67 >> $KEYS_PATH/known_hosts \
