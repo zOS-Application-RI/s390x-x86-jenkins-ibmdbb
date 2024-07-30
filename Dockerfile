@@ -82,7 +82,7 @@ RUN mkdir -p $JENKINS_HOME \
 
 # RUN chown ${uid}:${gid} $JENKINS_HOME \
     # && groupadd -g ${gid} ${group} \
-RUN    useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    # && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 # RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
 # ###########Omit this line $$$$
