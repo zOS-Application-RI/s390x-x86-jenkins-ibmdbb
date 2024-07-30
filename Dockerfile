@@ -12,7 +12,7 @@ RUN dpkg-reconfigure --frontend noninteractive tzdata
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y git curl wget ca-certificates supervisor openjdk-11-jdk ansible && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git curl wget ca-certificates supervisor openjdk-17-jdk ansible && \
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git-lfs && \
     git lfs install && \

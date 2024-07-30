@@ -26,7 +26,7 @@ jobs:
         # uses: fernandrone/linelint@0.0.4
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.2.1
+        uses: docker/setup-buildx-action@v2.5.0
         with:
           install: true
       -  
@@ -41,7 +41,7 @@ jobs:
 
       -     
         name: Cache Docker layers
-        uses: actions/cache@v3.0.5
+        uses: actions/cache@v3.3.1
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       -
         name: Build and push
-        uses: docker/build-push-action@v3.1.0
+        uses: docker/build-push-action@v4.0.0
         with:
           context: ./
           file: ./Dockerfile
