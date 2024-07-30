@@ -104,20 +104,20 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
 # could use ADD but this one does not check Last-Modified header neither does it allow to control checksum
 # see https://github.com/docker/docker/issues/8331
 # RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
-RUN wget -O /usr/share/jenkins/jenkins.war ${JENKINS_URL} \
-    && set -eux; \
-    ARCH="$(dpkg --print-architecture)"; \
-    case "${ARCH}" in \
-    amd64|x86_64) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-     ;; \
-    ppc64el|ppc64le) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-     ;; \
-    s390x) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-    ;; \
-    arm64) echo " No validation required, giving unexpected results" ;; \
-    *) \
-    echo "Unsupported arch: ${ARCH}"; \
-    exit 1;  ;;  esac; 
+# RUN wget -O /usr/share/jenkins/jenkins.war ${JENKINS_URL} \
+#     && set -eux; \
+#     ARCH="$(dpkg --print-architecture)"; \
+#     case "${ARCH}" in \
+#     amd64|x86_64) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
+#      ;; \
+#     ppc64el|ppc64le) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
+#      ;; \
+#     s390x) echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
+#     ;; \
+#     arm64) echo " No validation required, giving unexpected results" ;; \
+#     *) \
+#     echo "Unsupported arch: ${ARCH}"; \
+#     exit 1;  ;;  esac; 
 
 RUN chown -R ${user} "$JENKINS_HOME" "$REF" 
 # OpenShift gives a random uid for the user and some programs try to find a username from the /etc/passwd.
