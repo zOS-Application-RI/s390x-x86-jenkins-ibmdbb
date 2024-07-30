@@ -1,8 +1,18 @@
-FROM ubuntu:latest
+# FROM ubuntu:latest
 #FROM ibmjava
+FROM jenkins/jenkins:lts-jdk17
+#:latest-jdk11
+####
+#### Python, Ansible on Jenkins
+####
+USER root
+
 ################################################################################################
 LABEL maintainer="ashissah@in.ibm.com"
 ################################################################################################
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y python3 pip ansible
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata xsltproc sshpass maven \
     &&  rm -rf /var/lib/apt/lists/*
 ENV TZ=Asia/Kolkata
@@ -69,9 +79,11 @@ RUN mkdir -p $JENKINS_HOME \
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-RUN chown ${uid}:${gid} $JENKINS_HOME \
-    && groupadd -g ${gid} ${group} \
-    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+
+# RUN chown ${uid}:${gid} $JENKINS_HOME \
+    # && groupadd -g ${gid} ${group} \
+RUN    useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+
 # RUN echo -e "jenkins ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
 # ###########Omit this line $$$$
 # RUN echo "jenkins:jenkins" | chpasswd
