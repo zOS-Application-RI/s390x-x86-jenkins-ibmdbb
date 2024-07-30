@@ -205,14 +205,14 @@ EXPOSE ${agent_port}
 # will be used by dbb web server:
 # EXPOSE ${dbb_port}
 ######
-USER ${user}
-RUN ansible-galaxy collection install ibm.ibm_zos_core -p ${JENKINS_HOME} && \
-    ansible-galaxy collection install ibm.ibm_zos_zosmf -p ${JENKINS_HOME} && \
-    ansible-galaxy collection install ibm.ibm_zos_sysauto -p ${JENKINS_HOME} && \
-    ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME} && \
-    cd ${JENKINS_HOME} && mkdir zconbt && cd zconbt && \
-    wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/updates/zconbt.zip && \
-    jar -xf zconbt.zip 
+# USER ${user}
+# RUN ansible-galaxy collection install ibm.ibm_zos_core -p ${JENKINS_HOME} && \
+#     ansible-galaxy collection install ibm.ibm_zos_zosmf -p ${JENKINS_HOME} && \
+#     ansible-galaxy collection install ibm.ibm_zos_sysauto -p ${JENKINS_HOME} && \
+#     ansible-galaxy collection install ibm.ibm_zos_ims -p ${JENKINS_HOME} && \
+#     cd ${JENKINS_HOME} && mkdir zconbt && cd zconbt && \
+#     wget https://public.dhe.ibm.com/ibmdl/export/pub/software/htp/zos/updates/zconbt.zip && \
+#     jar -xf zconbt.zip 
     
 USER root
 RUN chown -R ${user} "$JENKINS_HOME" "$REF" 
